@@ -1,7 +1,7 @@
 {
   "name": "ledgerlift-suite",
-  "version": "1.0.0",
-  "description": "LedgerLift Suite – CA Desk (practice management) + Ledgify (SME accounting) in one app",
+  "version": "1.0.1",
+  "description": "LedgerLift Suite \u2013 CA Desk (practice management) + Ledgify (SME accounting) in one app",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -22,13 +22,27 @@
       "src/**/*"
     ],
     "mac": {
-      "target": [{"target": "dmg", "arch": ["x64"]}],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "icon": "src/assets/icon.png"
     },
     "win": {
-      "target": [{"target": "nsis", "arch": ["x64"]}],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "publish": null,
       "icon": "src/assets/icon.ico"
     },
