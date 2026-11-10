@@ -1,0 +1,46 @@
+{
+  "name": "ledgerlift-suite",
+  "version": "1.0.0",
+  "description": "LedgerLift Suite – CA Desk (practice management) + Ledgify (SME accounting) in one app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac-x64": "electron-builder --mac --x64",
+    "build:mac-arm64": "electron-builder --mac --arm64",
+    "build:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.ledgerlift.suite",
+    "productName": "LedgerLift Suite",
+    "publish": null,
+    "files": [
+      "main.js",
+      "src/**/*"
+    ],
+    "mac": {
+      "target": [{"target": "dmg", "arch": ["x64"]}],
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "icon": "src/assets/icon.png"
+    },
+    "win": {
+      "target": [{"target": "nsis", "arch": ["x64"]}],
+      "publish": null,
+      "icon": "src/assets/icon.ico"
+    },
+    "dmg": {
+      "title": "Install LedgerLift Suite",
+      "writeUpdateInfo": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

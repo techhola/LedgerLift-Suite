@@ -1,0 +1,54 @@
+name: Build LedgerLift Suite Installers
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  build-mac-x64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - run: npm ci
+      - run: npm run build:mac-x64
+        env: {CSC_IDENTITY_AUTO_DISCOVERY: false}
+      - uses: actions/upload-artifact@v4
+        with: {name: LedgerLift-macOS-Intel-DMG, path: dist/*.dmg, retention-days: 30}
+  build-mac-arm64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - run: npm ci
+      - run: npm run build:mac-arm64
+        env: {CSC_IDENTITY_AUTO_DISCOVERY: false}
+      - uses: actions/upload-artifact@v4
+        with: {name: LedgerLift-macOS-AppleSilicon-DMG, path: dist/*.dmg, retention-days: 30}
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - run: npm ci
+      - run: npm run build:win
+        env: {CSC_IDENTITY_AUTO_DISCOVERY: false}
+      - uses: actions/upload-artifact@v4
+        with: {name: LedgerLift-Windows-EXE, path: dist/*.exe, retention-days: 30}
+  release:
+    needs: [build-mac-x64, build-mac-arm64, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: LedgerLift-macOS-Intel-DMG, path: ./release}
+      - uses: actions/download-artifact@v4
+        with: {name: LedgerLift-macOS-AppleSilicon-DMG, path: ./release}
+      - uses: actions/download-artifact@v4
+        with: {name: LedgerLift-Windows-EXE, path: ./release}
+      - run: gh release create v1.0.${{ github.run_number }} ./release/* --repo "${{ github.repository }}" --title "LedgerLift Suite v1.0.${{ github.run_number }}" --notes "CA Desk (practice management) + Ledgify (SME accounting) unified app. Switch between CA and trader modes with one click."
+        env: {GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}}
